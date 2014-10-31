@@ -1,5 +1,5 @@
 PI
 =========
 
-![pi](https://raw.githubusercontent.com/adamar/PI/doc/pi.jpg)
+![pi](https://raw.githubusercontent.com/adamar/PI/master/doc/pi.jpg)
 
