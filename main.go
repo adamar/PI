@@ -4,16 +4,25 @@ package main
 import (
 	"bytes"
         "os"
-	"log"
 	"os/exec"
         "io"
+        "flag"
+        "log"
 )
 
 
 func main() {
 
+    var pid = flag.String("p", "", "pid of the process to inspect")
+    flag.Parse()
+
+    if *pid == "" {
+        os.Exit(1)
+    }
+
+
     comm := "cat"
-    flags := []string{"/proc/1/env"}
+    flags := []string{"/proc/" + *pid + "/env"}
     val, _ := runCmd(comm, flags)
     log.Print(val)
 
