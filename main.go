@@ -33,6 +33,7 @@ func getEnv(pid string) error {
 
     comm := "cat"
     flags := []string{"/proc/" + *pid + "/environ"}
+    val, _ := runCmd(comm, flags)
     return nil
 
 }
@@ -42,6 +43,7 @@ func getIO(pid string) error {
 
     comm := "cat"
     flags := []string{`/proc/` + *pid + `/io`, `|`, `grep`,`"^bytes"`}
+    val, _ := runCmd(comm, flags)
     return nil
 
 }
