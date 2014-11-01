@@ -3,6 +3,8 @@ PI - Process Investigator
 
 ![pi](https://raw.githubusercontent.com/adamar/PI/master/doc/pi.jpg)
 
+Still under heavy development!
+
 
 About	
 --------------
