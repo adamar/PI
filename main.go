@@ -21,11 +21,10 @@ func main() {
     }
 
 
-    comm := "cat"
-    flags := []string{"/proc/" + *pid + "/env"}
+    comm := "ps"
+    flags := []string{"-p", *pid, "-o", "etime="}
     val, _ := runCmd(comm, flags)
     log.Print(val)
-
 
 }
 
@@ -34,6 +33,8 @@ func main() {
 func runCmd(comm string, flags []string) ([]string, error) {
 
     cmd := exec.Command(comm, flags...)
+
+    output := []string{}
 
     // STDOUT
     stdPipe, err := cmd.StdoutPipe()
@@ -63,7 +64,6 @@ func runCmd(comm string, flags []string) ([]string, error) {
     stdBuf := new(bytes.Buffer)
     stdBuf.ReadFrom(stdPipe)
 
-
     for {
 
         line, err := stdBuf.ReadString('\n')
@@ -71,14 +71,13 @@ func runCmd(comm string, flags []string) ([]string, error) {
             break
         }
 
-        log.Print(line)
+        output = append(output, line)
 
     }
 
-
     cmd.Wait()
 
-    return nil, nil
+    return output, nil
 
 }
 
