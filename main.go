@@ -7,7 +7,6 @@ import (
 	"os/exec"
         "io"
         "flag"
-        "log"
 )
 
 
@@ -26,7 +25,7 @@ func main() {
 func getProcUptime(pid string) ([]string, error) {
 
     comm := "ps"
-    flags := []string{"-p", *pid, "-o", "etime="}
+    flags := []string{"-p", pid, "-o", "etime="}
     val, err := runCmd(comm, flags)
     if err != nil {
         return nil, err
@@ -39,7 +38,7 @@ func getProcUptime(pid string) ([]string, error) {
 func getEnv(pid string) ([]string, error) {
 
     comm := "cat"
-    flags := []string{"/proc/" + *pid + "/environ"}
+    flags := []string{"/proc/" + pid + "/environ"}
     val, err := runCmd(comm, flags)
     if err != nil {
         return nil, err
@@ -52,7 +51,7 @@ func getEnv(pid string) ([]string, error) {
 func getIO(pid string) ([]string, error) {
 
     comm := "cat"
-    flags := []string{`/proc/` + *pid + `/io`, `|`, `grep`,`"^bytes"`}
+    flags := []string{`/proc/` + pid + `/io`, `|`, `grep`,`"^bytes"`}
     val, err := runCmd(comm, flags)
     if err != nil {
         return nil, err
