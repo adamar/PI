@@ -32,10 +32,22 @@ func main() {
 func getEnv(pid string) error {
 
     comm := "cat"
-    flags := []string{"/proc." + *pid + "environ"}
+    flags := []string{"/proc/" + *pid + "/environ"}
     return nil
 
 }
+
+
+func getIO(pid string) error {
+
+    comm := "cat"
+    flags := []string{`/proc/` + *pid + `/io`, `|`, `grep`,`"^bytes"`}
+    return nil
+
+}
+
+
+
 
 
 func runCmd(comm string, flags []string) ([]string, error) {
