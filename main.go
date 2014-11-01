@@ -27,8 +27,11 @@ func getProcUptime(pid string) ([]string, error) {
 
     comm := "ps"
     flags := []string{"-p", *pid, "-o", "etime="}
-    val, _ := runCmd(comm, flags)
-    log.Print(val)
+    val, err := runCmd(comm, flags)
+    if err != nil {
+        return nil, err
+    }
+    return val, nil
 
 }
 
@@ -37,8 +40,11 @@ func getEnv(pid string) ([]string, error) {
 
     comm := "cat"
     flags := []string{"/proc/" + *pid + "/environ"}
-    val, _ := runCmd(comm, flags)
-    return nil
+    val, err := runCmd(comm, flags)
+    if err != nil {
+        return nil, err
+    }
+    return val, nil
 
 }
 
@@ -48,7 +54,10 @@ func getIO(pid string) ([]string, error) {
     comm := "cat"
     flags := []string{`/proc/` + *pid + `/io`, `|`, `grep`,`"^bytes"`}
     val, err := runCmd(comm, flags)
-    return nil
+    if err != nil {
+        return nil, err
+    }
+    return val, nil
 
 }
 
