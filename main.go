@@ -11,6 +11,7 @@ import (
 )
 
 
+
 func main() {
 
     var pid = flag.String("p", "", "pid of the process to inspect")
@@ -20,6 +21,9 @@ func main() {
         os.Exit(1)
     }
 
+}
+
+func getProcUptime(pid string) ([]string, error) {
 
     comm := "ps"
     flags := []string{"-p", *pid, "-o", "etime="}
@@ -29,7 +33,7 @@ func main() {
 }
 
 
-func getEnv(pid string) error {
+func getEnv(pid string) ([]string, error) {
 
     comm := "cat"
     flags := []string{"/proc/" + *pid + "/environ"}
@@ -39,11 +43,11 @@ func getEnv(pid string) error {
 }
 
 
-func getIO(pid string) error {
+func getIO(pid string) ([]string, error) {
 
     comm := "cat"
     flags := []string{`/proc/` + *pid + `/io`, `|`, `grep`,`"^bytes"`}
-    val, _ := runCmd(comm, flags)
+    val, err := runCmd(comm, flags)
     return nil
 
 }
