@@ -7,6 +7,8 @@ import (
 	"os/exec"
         "io"
         "flag"
+        "log"
+
 )
 
 
@@ -20,15 +22,37 @@ func main() {
         os.Exit(1)
     }
 
+    out, err := getProcUptime(*pid)
+    if err != nil {
+        log.Print(err)
+    }
+    log.Print("uptime")
+    log.Print(out)
+
+    out2, err := getEnv(*pid)
+    if err != nil {
+        log.Print(err)
+    }
+    log.Print("env")
+    log.Print(out2)
+
+    out3, err := getIO(*pid)
+    if err != nil {
+        log.Print(err)
+    }
+    log.Print("io")
+    log.Print(out3)
+
+
 }
 
-func getProcUptime(pid string) ([]string, error) {
+func getProcUptime(pid string) (string, error) {
 
     comm := "ps"
     flags := []string{"-p", pid, "-o", "etime="}
-    val, err := runCmd(comm, flags)
+    val, err := simpleRunCmd(comm, flags)
     if err != nil {
-        return nil, err
+        return "", err
     }
     return val, nil
 
@@ -38,6 +62,7 @@ func getProcUptime(pid string) ([]string, error) {
 func getEnv(pid string) ([]string, error) {
 
     comm := "cat"
+    log.Print(pid)
     flags := []string{"/proc/" + pid + "/environ"}
     val, err := runCmd(comm, flags)
     if err != nil {
@@ -61,6 +86,13 @@ func getIO(pid string) ([]string, error) {
 }
 
 
+func simpleRunCmd(comm string, flags []string) (string, error) {
+
+  cmd, err := exec.Command(comm, flags...).CombinedOutput()
+
+  return string(cmd), err
+
+}
 
 
 
@@ -101,6 +133,8 @@ func runCmd(comm string, flags []string) ([]string, error) {
     for {
 
         line, err := stdBuf.ReadString('\n')
+        log.Print(line)
+        log.Print(err)
         if err == io.EOF {
             break
         }
