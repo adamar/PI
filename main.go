@@ -8,7 +8,7 @@ import (
         "io"
         "flag"
         "log"
-
+        "strings"
 )
 
 
@@ -62,13 +62,14 @@ func getProcUptime(pid string) (string, error) {
 func getEnv(pid string) ([]string, error) {
 
     comm := "cat"
-    log.Print(pid)
     flags := []string{"/proc/" + pid + "/environ"}
-    val, err := runCmd(comm, flags)
+    val, err := simpleRunCmd(comm, flags)
     if err != nil {
         return nil, err
     }
-    return val, nil
+
+    output := strings.Split(val, "\000")
+    return output, nil
 
 }
 
@@ -133,8 +134,8 @@ func runCmd(comm string, flags []string) ([]string, error) {
     for {
 
         line, err := stdBuf.ReadString('\n')
-        log.Print(line)
-        log.Print(err)
+        //log.Print(line)
+        //log.Print(err)
         if err == io.EOF {
             break
         }
