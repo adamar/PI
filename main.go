@@ -63,8 +63,22 @@ func getProcStats(pid string) ([]string, error) {
         return nil, err
     }
 
-    output := strings.Split(val, "\n")
-    log.Print(len(output))
+    output := strings.Split(val, " ")
+    var value string
+
+    switch i {
+            case "Z":
+              value = "Zombie"
+            case "S":
+              value = "Sleeping"
+            case "R":
+              value = "Running"
+            case "D":
+              value = "Waiting in Disk Sleep"
+            case "W":
+              value = "Paging"
+    }
+    log.Print(output[2])
     return output, nil
 
 }
