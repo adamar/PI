@@ -54,19 +54,19 @@ func main() {
 
 }
 
-func getProcStats(pid string) ([]string, error) {
+func getProcStats(pid string) (string, error) {
 
     comm := "cat"
     flags := []string{"/proc/" + pid + "/stat"}
     val, err := simpleRunCmd(comm, flags)
     if err != nil {
-        return nil, err
+        return "", err
     }
 
     output := strings.Split(val, " ")
     var value string
 
-    switch i {
+    switch output[2] {
             case "Z":
               value = "Zombie"
             case "S":
@@ -78,8 +78,7 @@ func getProcStats(pid string) ([]string, error) {
             case "W":
               value = "Paging"
     }
-    log.Print(output[2])
-    return output, nil
+    return value, nil
 
 }
 
