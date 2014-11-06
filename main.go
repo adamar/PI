@@ -24,27 +24,52 @@ func main() {
 
     out, err := getProcUptime(*pid)
     if err != nil {
-        log.Print(err)
+        log.Print("uptime error")
     }
     log.Print("uptime")
     log.Print(out)
 
     out2, err := getEnv(*pid)
     if err != nil {
-        log.Print(err)
+        log.Print("env error")
     }
     log.Print("env")
     log.Print(out2)
 
     out3, err := getIO(*pid)
     if err != nil {
-        log.Print(err)
+        log.Print("io error")
     }
     log.Print("io")
     log.Print(out3)
 
+    out4, err := getProcStats(*pid)
+    if err != nil {
+        log.Print("proc stat error")
+    }
+    log.Print("state")
+    log.Print(out4)
+
+
 
 }
+
+func getProcStats(pid string) ([]string, error) {
+
+    comm := "cat"
+    flags := []string{"/proc/" + pid + "/stat"}
+    val, err := simpleRunCmd(comm, flags)
+    if err != nil {
+        return nil, err
+    }
+
+    output := strings.Split(val, "\n")
+    log.Print(len(output))
+    return output, nil
+
+}
+
+
 
 func getProcUptime(pid string) (string, error) {
 
