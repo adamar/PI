@@ -22,6 +22,7 @@ func main() {
         os.Exit(1)
     }
 
+
     out, err := getProcUptime(*pid)
     if err != nil {
         log.Print("uptime error")
@@ -29,12 +30,12 @@ func main() {
     log.Print("uptime")
     log.Print(out)
 
-    out2, err := getEnv(*pid)
-    if err != nil {
-        log.Print("env error")
-    }
-    log.Print("env")
-    log.Print(out2)
+    //out2, err := getEnv(*pid)
+    //if err != nil {
+    //    log.Print("env error")
+    //}
+    //log.Print("env")
+    //log.Print(out2)
 
     out3, err := getIO(*pid)
     if err != nil {
@@ -43,7 +44,7 @@ func main() {
     log.Print("io")
     log.Print(out3)
 
-    out4, err := getProcStats(*pid)
+    out4, err := getProcStatus(*pid)
     if err != nil {
         log.Print("proc stat error")
     }
@@ -54,7 +55,7 @@ func main() {
 
 }
 
-func getProcStats(pid string) (string, error) {
+func getProcStatus(pid string) (string, error) {
 
     comm := "cat"
     flags := []string{"/proc/" + pid + "/stat"}
@@ -112,14 +113,17 @@ func getEnv(pid string) ([]string, error) {
 }
 
 
-func getIO(pid string) ([]string, error) {
+func getIO(pid string) (string, error) {
 
     comm := "cat"
     flags := []string{`/proc/` + pid + `/io`, `|`, `grep`,`"^bytes"`}
-    val, err := runCmd(comm, flags)
+    val, err := simpleRunCmd(comm, flags)
     if err != nil {
-        return nil, err
+        return "", err
     }
+
+    
+
     return val, nil
 
 }
@@ -188,5 +192,13 @@ func runCmd(comm string, flags []string) ([]string, error) {
 
 }
 
-
-
+func fileExists(path string) (bool, error) {
+    _, err := os.Stat(path)
+    if err == nil { 
+        return true, nil 
+    }
+    if os.IsNotExist(err) { 
+        return false, nil 
+    }
+    return false, err
+}
