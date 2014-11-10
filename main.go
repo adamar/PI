@@ -102,10 +102,12 @@ func getProcUptime(pid string) (string, error) {
 func getEnv(pid string) ([]string, error) {
 
     comm := "cat"
+
     fileExists, _ := fileExists("/proc/" + pid + "/environ")
     if fileExists == false {
         return nil, errors.New("File doesnt exist")
     }
+
     flags := []string{"/proc/" + pid + "/environ"}
     val, err := simpleRunCmd(comm, flags)
     if err != nil {
