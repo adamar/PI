@@ -59,7 +59,15 @@ func main() {
 
 func getProcStatus(pid string) (string, error) {
 
-    val, err := ioutil.ReadFile("/proc/" + pid + "/stat")
+
+    var fileName = "/proc/" + pid + "/stat"
+
+    fileExists, _ := fileExists(fileName)
+    if fileExists == false {
+         return "", errors.New("File doesnt exist")
+    }
+
+    val, err := ioutil.ReadFile(fileName)
     if err != nil {
         return "", err
     }
