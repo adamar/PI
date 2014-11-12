@@ -6,6 +6,7 @@ import (
         "os"
 	"os/exec"
         "io"
+        "io/ioutil"
         "flag"
         "log"
         "strings"
@@ -58,14 +59,13 @@ func main() {
 
 func getProcStatus(pid string) (string, error) {
 
-    comm := "cat"
-    flags := []string{"/proc/" + pid + "/stat"}
-    val, err := simpleRunCmd(comm, flags)
+    val, err := ioutil.ReadFile("/proc/" + pid + "/stat")
     if err != nil {
         return "", err
     }
 
-    output := strings.Split(val, " ")
+    output := strings.Split(string(val), " ")
+
     var value string
 
     switch output[2] {
