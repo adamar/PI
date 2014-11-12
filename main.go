@@ -101,12 +101,14 @@ func getProcUptime(pid string) (string, error) {
 
 func getEnv(pid string) ([]string, error) {
 
-    fileExists, _ := fileExists("/proc/" + pid + "/environ")
+    var fileName = "/proc/" + pid + "/environ"
+
+    fileExists, _ := fileExists(fileName)
     if fileExists == false {
         return nil, errors.New("File doesnt exist")
     }
 
-    val, err := ioutil.ReadFile("/proc/" + pid + "/environ")
+    val, err := ioutil.ReadFile(fileName)
     if err != nil {
         return nil, err
     }
