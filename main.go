@@ -129,7 +129,14 @@ func getEnv(pid string) ([]string, error) {
 
 func getIO(pid string) (string, error) {
 
-    val, err := ioutil.ReadFile("/proc/" + pid + "/io")
+    var fileName = "/proc/" + pid + "/io"
+
+    fileExists, _ := fileExists(fileName)
+    if fileExists == false {
+         return "", errors.New("File doesnt exist")
+    }
+                            
+    val, err := ioutil.ReadFile(fileName)
     if err != nil {
         return "", err
     }
