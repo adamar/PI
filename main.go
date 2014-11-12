@@ -119,16 +119,12 @@ func getEnv(pid string) ([]string, error) {
 
 func getIO(pid string) (string, error) {
 
-    comm := "cat"
-    flags := []string{`/proc/` + pid + `/io`, `|`, `grep`,`"^bytes"`}
-    val, err := simpleRunCmd(comm, flags)
+    val, err := ioutil.ReadFile("/proc/" + pid + "/io")
     if err != nil {
         return "", err
     }
 
-    
-
-    return val, nil
+    return string(val), nil
 
 }
 
