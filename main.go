@@ -142,6 +142,20 @@ func getIO(pid string) (string, error) {
 }
 
 
+func getPidTree(pid string) ([]string, error) {
+
+
+    comm := "pstree"
+    flags := []string{"-p", pid }
+    val, err := runCmd(comm, flags)
+    if err != nil {
+        return nil, err
+    }
+    return val, nil
+
+}
+
+
 
 func simpleRunCmd(comm string, flags []string) (string, error) {
 
