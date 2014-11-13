@@ -10,6 +10,7 @@ import (
         "flag"
         "log"
         "strings"
+        "fmt"
         "errors"
 )
 
@@ -25,34 +26,29 @@ func main() {
     }
 
 
-    out, err := getProcUptime(*pid)
+    uptime, err := getProcUptime(*pid)
     if err != nil {
         log.Print("uptime error")
     }
-    log.Print("uptime")
-    log.Print(out)
+    fmt.Println("The Process has been running for:",uptime)
 
-    //out2, err := getEnv(*pid)
-    //if err != nil {
-    //    log.Print("env error")
-    //}
-    //log.Print("env")
-    //log.Print(out2)
+    envs, err := getEnv(*pid)
+    if err != nil {
+        log.Print("env error")
+    }
+    fmt.Println("Environment:",envs) 
 
-    out3, err := getIO(*pid)
+    iostats, err := getIO(*pid)
     if err != nil {
         log.Print("io error")
     }
-    log.Print("io")
-    log.Print(out3)
+    fmt.Println("I/O stats of the process: ", iostats)
 
-    out4, err := getProcStatus(*pid)
+    procStatus, err := getProcStatus(*pid)
     if err != nil {
         log.Print("proc stat error")
     }
-    log.Print("state")
-    log.Print(out4)
-
+    fmt.Println("The process is:", procStatus)
 
 
 }
