@@ -41,6 +41,24 @@ func main() {
 
           case strings.HasPrefix(lines[3], "recvfrom"):
 
+          case strings.HasPrefix(lines[3], "sendto"):
+
+          case strings.HasPrefix(lines[3], "recvmsg"):
+
+          case strings.HasPrefix(lines[3], "sendmsg"):
+
+          case strings.HasPrefix(lines[3], "getsockopt"):
+
+          case strings.HasPrefix(lines[3], "setsockopt"):
+
+          case strings.HasPrefix(lines[3], "socket"):
+
+          case strings.HasPrefix(lines[3], "connect"):
+
+          case strings.HasPrefix(lines[3], "getsockname"):
+
+          case strings.HasPrefix(lines[3], "bind"):
+
           //default:
           //   log.Print("Undefined :",line, "    ",filestring)
 
