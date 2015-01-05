@@ -35,6 +35,7 @@ func main() {
       line := string(bufline)
 
       lines := strings.Split(line, " ")
+      if len(lines) > 3 {
       filestring := strings.Split(lines[3], `"`)
 
       switch {
@@ -48,19 +49,17 @@ func main() {
           case strings.HasPrefix(lines[3], "readlink"):
               log.Print("check symlink ", filestring[1])
 
-
-
           default:
-             log.Print(lines[3])
+             log.Print("Undefined :",line)
 
       }
+      }
+
 
       if err != nil {
          log.Fatal(err)
       }
   }
-
-
 
 }
 
