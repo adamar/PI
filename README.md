@@ -10,3 +10,11 @@ About
 --------------
 PI is a tool for inspecting linux processes
 
+
+Parts
+-------------
+Currently there is a main Process Investigator which pulls information
+from the /proc directory
+
+There will also be a number of secondary tools for viewing system calls (ie. file operations, networking, etc...)
+
