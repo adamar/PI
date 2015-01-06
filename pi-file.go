@@ -36,16 +36,16 @@ func main() {
 			switch {
 
 			case strings.HasPrefix(lines[3], "open"):
-				log.Print("open ", filestring[1])
+                print("open " + filestring[1])
 
 			case strings.HasPrefix(lines[3], "stat"):
-				log.Print("stat ", filestring[1])
+				print("stat " + filestring[1])
 
 			case strings.HasPrefix(lines[3], "readlink"):
-				log.Print("check symlink ", filestring[1])
+				print("check symlink " + filestring[1])
 
 			default:
-				log.Print("Undefined :", line)
+				print("Undefined :" + line)
 
 			}
 		}
@@ -56,3 +56,8 @@ func main() {
 	}
 
 }
+
+func print(txt string) {
+        log.Print("\x1b[31;1m" + txt + "\x1b[0m")
+}
+
