@@ -24,7 +24,7 @@ func main() {
 	cmd.Start()
 	r := bufio.NewReader(stdout)
 
-	//fileDescriptors := map[string]string{}
+	fileDescriptors := map[string]string{}
 
 	for {
 
@@ -42,7 +42,7 @@ func main() {
 			switch val[0] {
 
 			case "recvfrom":
-				fd := readFD(val[1], pid)
+				fd := readFD(val[1], pid, fileDescriptors)
 				log.Print("recvfrom " + fd)
 
 			case "sendto":
@@ -87,9 +87,14 @@ func parseString(str string) ([]string, bool) {
 	return w, false
 }
 
-func readFD(fd string, pid string) string {
+func readFD(fd string, pid string, fileDescriptors map[string]string) string {
+
+	if val, ok := fileDescriptors[fd]; ok {
+		return val
+	}
 
 	out, _ := exec.Command("readlink", "/proc/"+pid+"/fd/"+fd).Output()
-
+	fileDescriptors[fd] = string(out)
 	return string(out)
+
 }
