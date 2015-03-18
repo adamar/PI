@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -31,14 +32,21 @@ func main() {
 
 		val, empty := parseString(line)
 
+		if val[0] == "pid" {
+			//newpid := val[1:2]
+			val = val[2:]
+		}
+
 		if empty == false {
 			switch val[0] {
 
 			case "recvfrom":
+				fmt.Printf("%q\n", val)
 
 			case "sendto":
 
 			case "recvmsg":
+				fmt.Printf("%q\n", val)
 
 			case "sendmsg":
 
@@ -67,7 +75,7 @@ func main() {
 func parseString(str string) ([]string, bool) {
 	w := strings.FieldsFunc(str, func(r rune) bool {
 		switch r {
-		case '<', '>', ' ', ',', ')', '(', '{', '}':
+		case '<', '>', ' ', ',', ')', '(', '{', '}', '[', ']':
 			return true
 		}
 		return false
