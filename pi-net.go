@@ -29,34 +29,34 @@ func main() {
 		bufline, err := r.ReadString('\n')
 		line := string(bufline)
 
-		val := parseString(line)
+		val, empty := parseString(line)
 
-			switch val[0]{
+		if empty == false {
+			switch val[0] {
 
-			case strings.HasPrefix(lines[3], "recvfrom"):
+			case "recvfrom":
 
-			case strings.HasPrefix(lines[3], "sendto"):
+			case "sendto":
 
-			case strings.HasPrefix(lines[3], "recvmsg"):
+			case "recvmsg":
 
-			case strings.HasPrefix(lines[3], "sendmsg"):
+			case "sendmsg":
 
-			case strings.HasPrefix(lines[3], "getsockopt"):
+			case "getsockopt":
 
-			case strings.HasPrefix(lines[3], "setsockopt"):
+			case "setsockopt":
 
-			case strings.HasPrefix(lines[3], "socket"):
+			case "socket":
 
-			case strings.HasPrefix(lines[3], "connect"):
+			case "connect":
 
-			case strings.HasPrefix(lines[3], "getsockname"):
+			case "getsockname":
 
-			case strings.HasPrefix(lines[3], "bind"):
+			case "bind":
 
 			}
 
 		}
-
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -64,8 +64,7 @@ func main() {
 
 }
 
-
-func parseString(str string) []string {
+func parseString(str string) ([]string, bool) {
 	w := strings.FieldsFunc(str, func(r rune) bool {
 		switch r {
 		case '<', '>', ' ', ',', ')', '(', '{', '}':
@@ -73,6 +72,8 @@ func parseString(str string) []string {
 		}
 		return false
 	})
-	return w
+	if len(w) < 1 {
+		return nil, true
+	}
+	return w, false
 }
-
