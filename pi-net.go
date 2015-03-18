@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"flag"
-	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -25,6 +24,8 @@ func main() {
 	cmd.Start()
 	r := bufio.NewReader(stdout)
 
+	//fileDescriptors := map[string]string{}
+
 	for {
 
 		bufline, err := r.ReadString('\n')
@@ -41,12 +42,12 @@ func main() {
 			switch val[0] {
 
 			case "recvfrom":
-				fmt.Printf("%q\n", val)
+				fd := readFD(val[1], pid)
+				log.Print("recvfrom " + fd)
 
 			case "sendto":
 
 			case "recvmsg":
-				fmt.Printf("%q\n", val)
 
 			case "sendmsg":
 
@@ -84,4 +85,11 @@ func parseString(str string) ([]string, bool) {
 		return nil, true
 	}
 	return w, false
+}
+
+func readFD(fd string, pid string) string {
+
+	out, _ := exec.Command("readlink", "/proc/"+pid+"/fd/"+fd).Output()
+
+	return string(out)
 }
