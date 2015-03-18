@@ -29,11 +29,9 @@ func main() {
 		bufline, err := r.ReadString('\n')
 		line := string(bufline)
 
-		lines := strings.Split(line, " ")
-		if len(lines) > 3 {
-			log.Print(lines[3])
+		val := parseString(line)
 
-			switch {
+			switch val[0]{
 
 			case strings.HasPrefix(lines[3], "recvfrom"):
 
@@ -55,9 +53,6 @@ func main() {
 
 			case strings.HasPrefix(lines[3], "bind"):
 
-				//default:
-				//   log.Print("Undefined :",line, "    ",filestring)
-
 			}
 
 		}
@@ -68,3 +63,16 @@ func main() {
 	}
 
 }
+
+
+func parseString(str string) []string {
+	w := strings.FieldsFunc(str, func(r rune) bool {
+		switch r {
+		case '<', '>', ' ', ',', ')', '(', '{', '}':
+			return true
+		}
+		return false
+	})
+	return w
+}
+
