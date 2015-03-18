@@ -33,17 +33,26 @@ func main() {
 
 		val, empty := parseString(line)
 
+		var prefix string
+
 		if val[0] == "pid" {
-			//newpid := val[1:2]
+			prefix = "Child Process[" + val[1] + "] "
 			val = val[2:]
+		} else {
+			prefix = "Parent Process[" + pid + "] "
 		}
+
+		//log.Print(val)
 
 		if empty == false {
 			switch val[0] {
 
 			case "recvfrom":
-				fd := readFD(val[1], pid, fileDescriptors)
-				log.Print("recvfrom " + fd)
+				if val[2] == "unfinished" {
+					log.Print(prefix + "Failed Recvfrom ")
+				} else if val[8] == "-1" {
+					log.Print(prefix + "Failed Recvfrom ")
+				}
 
 			case "sendto":
 
@@ -58,6 +67,9 @@ func main() {
 			case "socket":
 
 			case "connect":
+				fd := readFD(val[1], pid, fileDescriptors)
+				log.Print(prefix + "Connect " + val[7])
+				log.Print(fd)
 
 			case "getsockname":
 
