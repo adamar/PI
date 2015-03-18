@@ -110,3 +110,9 @@ func readFD(fd string, pid string, fileDescriptors map[string]string) string {
 	return string(out)
 
 }
+
+func PrintOrange(msg string) {
+
+	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", msg)
+
+}
