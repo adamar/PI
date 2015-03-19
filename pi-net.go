@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -25,6 +26,7 @@ func main() {
 	r := bufio.NewReader(stdout)
 
 	fileDescriptors := map[string]string{}
+	log.Print(fileDescriptors)
 
 	for {
 
@@ -36,10 +38,12 @@ func main() {
 		var prefix string
 
 		if val[0] == "pid" {
-			prefix = "Child Process[" + val[1] + "] "
+			if val[1] != pid {
+				prefix = "Child Process[" + val[1] + "] "
+			} else {
+				prefix = "Parent Process[" + pid + "] "
+			}
 			val = val[2:]
-		} else {
-			prefix = "Parent Process[" + pid + "] "
 		}
 
 		//log.Print(val)
@@ -48,10 +52,17 @@ func main() {
 			switch val[0] {
 
 			case "recvfrom":
+				//log.Print(val)
 				if val[2] == "unfinished" {
-					log.Print(prefix + "Failed Recvfrom ")
+
+					// recvfrom 9 unfinished ...
+
+					PrintOrange(prefix+"Recvfrom Unfinished", line)
 				} else if val[8] == "-1" {
-					log.Print(prefix + "Failed Recvfrom ")
+
+					// recvfrom 9 0x30dfd1340074 4096 0 0 0 = -1 EAGAIN Resource temporarily unavailable
+
+					PrintOrange(prefix+"Failed Recvfrom ", line)
 				}
 
 			case "sendto":
@@ -67,9 +78,9 @@ func main() {
 			case "socket":
 
 			case "connect":
-				fd := readFD(val[1], pid, fileDescriptors)
-				log.Print(prefix + "Connect " + val[7])
-				log.Print(fd)
+				//fd := readFD(val[1], pid, fileDescriptors)
+				PrintOrange(prefix+"Connect "+val[7], line)
+				//log.Print(fd)
 
 			case "getsockname":
 
@@ -111,8 +122,8 @@ func readFD(fd string, pid string, fileDescriptors map[string]string) string {
 
 }
 
-func PrintOrange(msg string) {
+func PrintOrange(msg string, msg2 string) {
 
-	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", msg)
+	fmt.Printf("\x1b[31;1m%s\x1b[0m - %s\n", msg, msg2)
 
 }
