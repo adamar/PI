@@ -52,25 +52,27 @@ func main() {
 				fd := readFD(val[1], pid, fileDescriptors)
 				parseRecvfrom(prefix, val, fd)
 			case "sendto":
-				parseSendto(prefix, val)
+				fd := readFD(val[1], pid, fileDescriptors)
+				parseSendto(prefix, val, fd)
 			case "recvmsg":
 				fd := readFD(val[1], pid, fileDescriptors)
 				parseRecvmsg(prefix, val, fd)
 			case "sendmsg":
-				parseSendmsg(prefix, val)
+				fd := readFD(val[1], pid, fileDescriptors)
+				parseSendmsg(prefix, val, fd)
 
-			case "getsockopt":
+			//case "getsockopt":
 
-			case "setsockopt":
+			//case "setsockopt":
 
-			case "socket":
+			//case "socket":
 
 			case "connect":
 				parseConnect(prefix, val)
 
-			case "getsockname":
+			//case "getsockname":
 
-			case "bind":
+			//case "bind":
 
 			default:
 				log.Print(val)
@@ -90,15 +92,15 @@ func parseRecvmsg(prefix string, val []string, fd string) {
 
 }
 
-func parseSendmsg(prefix string, val []string) {
+func parseSendmsg(prefix string, val []string, fd string) {
 
-	log.Print(val)
+	PrintOrange(prefix + "Sendmsg to " + fd)
 
 }
 
-func parseSendto(prefix string, val []string) {
+func parseSendto(prefix string, val []string, fd string) {
 
-	log.Print(val)
+	PrintOrange(prefix + "Send to " + fd)
 
 }
 
