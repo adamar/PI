@@ -46,25 +46,10 @@ func main() {
 			val = val[2:]
 		}
 
-		//log.Print(val)
-
 		if empty == false {
 			switch val[0] {
-
 			case "recvfrom":
-				//log.Print(val)
-				if val[2] == "unfinished" {
-
-					// recvfrom 9 unfinished ...
-
-					PrintOrange(prefix+"Recvfrom Unfinished", line)
-				} else if val[8] == "-1" {
-
-					// recvfrom 9 0x30dfd1340074 4096 0 0 0 = -1 EAGAIN Resource temporarily unavailable
-
-					PrintOrange(prefix+"Failed Recvfrom ", line)
-				}
-
+				parseRecvfrom(prefix, val)
 			case "sendto":
 
 			case "recvmsg":
@@ -78,9 +63,7 @@ func main() {
 			case "socket":
 
 			case "connect":
-				//fd := readFD(val[1], pid, fileDescriptors)
-				PrintOrange(prefix+"Connect "+val[7], line)
-				//log.Print(fd)
+				PrintOrange(prefix + "Connect " + val[7])
 
 			case "getsockname":
 
@@ -92,6 +75,21 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+
+}
+
+func parseRecvfrom(prefix string, val []string) {
+
+	// recvfrom 9 unfinished ...
+	if val[2] == "unfinished" {
+
+		PrintOrange(prefix + "Recvfrom Unfinished")
+
+		// recvfrom 9 0x30dfd1340074 4096 0 0 0 = -1 EAGAIN Resource temporarily unavailable
+	} else if val[8] == "-1" {
+
+		PrintOrange(prefix + "Failed Recvfrom ")
 	}
 
 }
@@ -122,8 +120,8 @@ func readFD(fd string, pid string, fileDescriptors map[string]string) string {
 
 }
 
-func PrintOrange(msg string, msg2 string) {
+func PrintOrange(msg string) {
 
-	fmt.Printf("\x1b[31;1m%s\x1b[0m - %s\n", msg, msg2)
+	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", msg)
 
 }
