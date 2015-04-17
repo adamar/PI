@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"os/exec"
 )
 
@@ -28,6 +29,17 @@ func (c *Command) execCommand() error {
 	}
 
 	log.Print(string(output))
+
+	return nil
+
+}
+
+func checkPid(pid string) error {
+
+	_, err := os.Stat("/proc/" + pid + "/maps")
+	if err != nil {
+		return err
+	}
 
 	return nil
 
