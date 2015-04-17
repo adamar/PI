@@ -20,13 +20,12 @@ func init() {
 
 func main() {
 
-	cmd := exec.Command("strace", "-f", "-e", "trace=network", "-p", pid)
+	cmd := exec.Command("sudo", "strace", "-f", "-e", "trace=network", "-p", pid)
 	stdout, _ := cmd.StderrPipe()
 	cmd.Start()
 	r := bufio.NewReader(stdout)
 
 	fileDescriptors := map[string]string{}
-	log.Print(fileDescriptors)
 
 	for {
 
