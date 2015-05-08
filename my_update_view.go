@@ -146,8 +146,10 @@ func (pi *PI) layout(*gocui.Gui) error {
 func parseSyscallString(bufline string) string {
 
 	parsed, _ := parseAlphanumeric(bufline)
-
-	return strings.Join(parsed[:4], " ")
+	if len(parsed) < 4 {
+		return ""
+	}
+	return strings.Join(parsed[2:4], " ")
 
 }
 
