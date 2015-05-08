@@ -8,6 +8,7 @@ import (
 	"log"
 	"os/exec"
 	//"sort"
+	"strings"
 	"time"
 )
 
@@ -74,7 +75,9 @@ func (pi *PI) run() {
 		for {
 
 			bufline, _ := r.ReadString('\n')
-			ch <- bufline
+			parsedSyscall := parseSyscallString(bufline)
+			ch <- parsedSyscall
+
 		}
 
 	}(ch)
@@ -113,9 +116,9 @@ func (pi *PI) display(v io.Writer) error {
 
 	for k, _ := range pi.Syscalls {
 		if k == pi.Current {
-			output += fmt.Sprintf("=>" + k)
+			output += fmt.Sprintf("=>" + k + "\n")
 		} else {
-			output += fmt.Sprintf(k)
+			output += fmt.Sprintf(k + "\n")
 		}
 	}
 
@@ -133,4 +136,26 @@ func (pi *PI) layout(*gocui.Gui) error {
 		pi.display(v)
 	}
 	return nil
+}
+
+func parseSyscallString(bufline string) string {
+
+	parsed, _ := parseAlphanumeric(bufline)
+
+	return strings.Join(parsed[:4], " ")
+
+}
+
+func parseAlphanumeric(str string) ([]string, bool) {
+	w := strings.FieldsFunc(str, func(r rune) bool {
+		switch r {
+		case '<', '>', ' ', ',', ')', '(', '{', '}', '[', ']':
+			return true
+		}
+		return false
+	})
+	if len(w) < 1 {
+		return nil, true
+	}
+	return w, false
 }
