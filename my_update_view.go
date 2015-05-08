@@ -164,3 +164,15 @@ func parseAlphanumeric(str string) ([]string, bool) {
 	}
 	return w, false
 }
+
+func readFD(fd string, pid string, fileDescriptors map[string]string) string {
+
+	if val, ok := fileDescriptors[fd]; ok {
+		return val
+	}
+
+	out, _ := exec.Command("readlink", "/proc/"+pid+"/fd/"+fd).Output()
+	fileDescriptors[fd] = string(out)
+	return string(out)
+
+}
