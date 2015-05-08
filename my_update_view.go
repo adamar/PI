@@ -17,6 +17,7 @@ type PI struct {
 	Syscalls map[string]int
 	Current  string
 	GUI      *gocui.Gui
+	Pid      string
 }
 
 func main() {
@@ -46,6 +47,7 @@ func NewPI() *PI {
 
 	pi.Syscalls = map[string]int{}
 	pi.GUI = g
+	pi.Pid = "14295"
 	return &pi
 
 }
@@ -67,7 +69,7 @@ func (pi *PI) run() {
 	ch := make(chan string)
 
 	go func(ch chan string) {
-		cmd := exec.Command("sudo", "strace", "-f", "-e", "trace=network", "-p", "14295")
+		cmd := exec.Command("sudo", "strace", "-f", "-e", "trace=network", "-p", pi.Pid)
 		stdout, _ := cmd.StderrPipe()
 		cmd.Start()
 		r := bufio.NewReader(stdout)
@@ -84,6 +86,9 @@ func (pi *PI) run() {
 
 	for {
 		data := <-ch
+
+		//if HasPrefix(data, "Attached") <--- Ignore Process n attached
+
 		if _, ok := pi.Syscalls[data]; ok {
 			pi.Syscalls[data] = pi.Syscalls[data] + 1
 		} else {
