@@ -8,6 +8,7 @@ import (
 	"log"
 	"os/exec"
 	//"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -18,6 +19,7 @@ type PI struct {
 	Current  string
 	GUI      *gocui.Gui
 	Pid      string
+	FD       map[string]string
 }
 
 func main() {
@@ -48,6 +50,7 @@ func NewPI() *PI {
 	pi.Syscalls = map[string]int{}
 	pi.GUI = g
 	pi.Pid = "14295"
+	pi.FD = map[string]string{}
 	return &pi
 
 }
@@ -77,7 +80,7 @@ func (pi *PI) run() {
 		for {
 
 			bufline, _ := r.ReadString('\n')
-			parsedSyscall := parseSyscallString(bufline)
+			parsedSyscall := pi.parseSyscallString(bufline)
 			ch <- parsedSyscall
 
 		}
@@ -94,7 +97,6 @@ func (pi *PI) run() {
 		} else {
 			pi.Syscalls[data] = 1
 		}
-		//pi.Syscalls = append(pi.Syscalls, data)
 		pi.Current = data
 	}
 
@@ -143,13 +145,21 @@ func (pi *PI) layout(*gocui.Gui) error {
 	return nil
 }
 
-func parseSyscallString(bufline string) string {
+func (pi *PI) parseSyscallString(bufline string) string {
 
 	parsed, _ := parseAlphanumeric(bufline)
 	if len(parsed) < 4 {
 		return ""
 	}
-	return strings.Join(parsed[2:4], " ")
+	if checkNumeric(parsed[4]) == true {
+
+		fd := readFD(parsed[4], pi.Pid, pi.FD)
+		log.Print(fd)
+		return parsed[3] + " " + fd
+
+	}
+	//return strings.Join(parsed[2:4], " ")
+	return ""
 
 }
 
@@ -176,5 +186,14 @@ func readFD(fd string, pid string, fileDescriptors map[string]string) string {
 	out, _ := exec.Command("readlink", "/proc/"+pid+"/fd/"+fd).Output()
 	fileDescriptors[fd] = string(out)
 	return string(out)
+
+}
+
+func checkNumeric(num string) bool {
+
+	if _, err := strconv.Atoi(num); err == nil {
+		return true
+	}
+	return false
 
 }
