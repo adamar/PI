@@ -49,7 +49,7 @@ func NewPI() *PI {
 
 	pi.Syscalls = map[string]int{}
 	pi.GUI = g
-	pi.Pid = "14295"
+	pi.Pid = "28338"
 	pi.FD = map[string]string{}
 	return &pi
 
@@ -81,7 +81,9 @@ func (pi *PI) run() {
 
 			bufline, _ := r.ReadString('\n')
 			parsedSyscall := pi.parseSyscallString(bufline)
-			ch <- parsedSyscall
+			if parsedSyscall != "" {
+				ch <- parsedSyscall
+			}
 
 		}
 
@@ -149,17 +151,20 @@ func (pi *PI) parseSyscallString(bufline string) string {
 
 	parsed, _ := parseAlphanumeric(bufline)
 	if len(parsed) < 4 {
+		return strings.Join(parsed, " ")
+	}
+
+	if parsed[len(parsed)-5 : len(parsed)-4][0] == "EAGAIN" {
 		return ""
 	}
+
 	if checkNumeric(parsed[4]) == true {
 
 		fd := readFD(parsed[4], pi.Pid, pi.FD)
-		log.Print(fd)
 		return parsed[3] + " " + fd
 
 	}
-	//return strings.Join(parsed[2:4], " ")
-	return ""
+	return strings.Join(parsed[2:4], " ")
 
 }
 
